@@ -7,7 +7,7 @@ module program_counter (
     // inst_mem[0, 4, 8, 12,...] 
     always @(posedge sys_clk or negedge sys_rst_n) begin
         if (sys_rst_n == 1'b0)
-            inst_addr <= 32'b0;
+            inst_addr <= 32'd0;
         else 
             inst_addr <= inst_addr + 3'd4;
     end    

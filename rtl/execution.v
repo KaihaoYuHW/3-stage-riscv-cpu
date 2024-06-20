@@ -2,10 +2,17 @@
 
 module execution (
     input wire [31:0] inst,
+    input wire [31:0] inst_addr,
     input wire [31:0] op1,
     input wire [31:0] op2,
 
-    output reg [31:0] rd_data
+    // to register file
+    output reg [31:0] rd_data,
+
+    // to ctrl
+    output reg [31:0] jump_addr,
+    output reg jump_en,
+    output reg hold_en
 );
 
     wire [6:0] funct7;
@@ -27,6 +34,9 @@ module execution (
     always @(*) begin
         case (opcode)
             `INST_TYPE_I: begin
+                jump_addr = 32'd0;
+                jump_en = 1'b0;
+                hold_en = 1'b0;
                 case (funct3)
                     `INST_ADDI: begin
                         rd_data = op1 + op2;
@@ -36,8 +46,10 @@ module execution (
                     end
                 endcase
             end
-
             `INST_TYPE_R_M: begin
+                jump_addr = 32'd0;
+                jump_en = 1'b0;
+                hold_en = 1'b0;
                 case (funct3)
                     `INST_ADD_SUB: begin
                         if (funct7 == 7'b000_0000)
@@ -50,7 +62,27 @@ module execution (
                     end
                 endcase
             end
-            default: rd_data = 32'b0;
+            `INST_TYPE_B:begin
+                rd_data = 32'b0;
+                case (funct3)
+                    `INST_BNE: begin
+                        jump_addr = 32'd134;    //改
+                        jump_en = 1'b1;
+                        hold_en = 1'b1;
+                    end
+                    default: begin
+                        jump_addr = 32'd0;
+                        jump_en = 1'b0;
+                        hold_en = 1'b0;
+                    end
+                endcase
+            end
+            default: begin
+                jump_addr = 32'd0;
+                jump_en = 1'b0;
+                hold_en = 1'b0;
+                rd_data = 32'b0;
+            end
         endcase
     end
     

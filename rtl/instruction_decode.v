@@ -61,7 +61,6 @@ module instruction_decode (
                     end
                 endcase
             end
-
             `INST_TYPE_R_M: begin
                 case (funct3)
                     `INST_ADD_SUB: begin
@@ -89,6 +88,26 @@ module instruction_decode (
                 op2 = 32'b0;
                 rd_addr = 5'd0;
                 rd_wen = 1'b0;
+            end
+            `INST_TYPE_B: begin
+                case (funct3)
+                    `INST_BNE: begin
+                        rs1_addr = rs1;
+                        rs2_addr = rs2;
+                        op1 = rs1_data;
+                        op2 = rs2_data;
+                        rd_addr = 5'd0;
+                        rd_wen = 1'b0;
+                    end
+                    default: begin
+                        rs1_addr = 5'd0;
+                        rs2_addr = 5'd0;
+                        op1 = 32'b0;
+                        op2 = 32'b0;
+                        rd_addr = 5'd0;
+                        rd_wen = 1'b0;
+                    end
+                endcase
             end
         endcase
     end
