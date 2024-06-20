@@ -20,7 +20,6 @@ module open_risc_v (
     wire [31:0] id_rf_rs2_data;
     wire [4:0] id_rf_rs1_addr;
     wire [4:0] id_rf_rs2_addr;
-
     // instruction decode to id_ex
     wire [31:0] id_id_ex_op1;
     wire [31:0] id_id_ex_op2;
@@ -29,13 +28,17 @@ module open_risc_v (
 
     // execution to register file
     wire [31:0] ex_rf_reg_wdata;
+    // execution to program counter
+    wire [31:0] ex_pc_jump_addr;
+    wire ex_pc_jump_en;
+    // execution to if_id and id_ex
+    wire ex_if_id_hold_en;
 
     // id_ex to execution
     wire [31:0] id_ex_ex_inst;
     wire [31:0] id_ex_ex_inst_addr;
     wire [31:0] id_ex_ex_op1;
     wire [31:0] id_ex_ex_op2;
-
     // id_ex to register file
     wire [4:0] id_ex_rf_rd_addr;
     wire id_ex_rf_rd_wen;
@@ -43,6 +46,8 @@ module open_risc_v (
     program_counter program_counter_inst (
         .sys_clk(sys_clk),
         .sys_rst_n(sys_rst_n),
+        .jump_en(ex_pc_jump_en),
+        .jump_addr(ex_pc_jump_addr),
         .inst_addr(pc_if_inst_addr)
     );
 
@@ -54,6 +59,7 @@ module open_risc_v (
     if_id if_id_inst (
         .sys_clk(sys_clk),
         .sys_rst_n(sys_rst_n),
+        .hold_en(ex_if_id_hold_en),
         .inst(if_if_id_inst),
         .inst_addr(pc_if_inst_addr),
         .inst_dly(if_id_id_inst),
@@ -87,6 +93,7 @@ module open_risc_v (
     id_ex id_ex_inst (
         .sys_clk(sys_clk),
         .sys_rst_n(sys_rst_n),
+        .hold_en(ex_if_id_hold_en),
         .inst(if_id_id_inst),
         .inst_addr(if_id_id_ex_inst_addr),
         .op1(id_id_ex_op1),

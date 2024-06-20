@@ -91,7 +91,7 @@ module instruction_decode (
             end
             `INST_TYPE_B: begin
                 case (funct3)
-                    `INST_BNE: begin
+                    `INST_BNE, `INST_BEQ: begin
                         rs1_addr = rs1;
                         rs2_addr = rs2;
                         op1 = rs1_data;
