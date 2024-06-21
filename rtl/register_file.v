@@ -26,7 +26,10 @@ module register_file (
     always @(*) begin
         if (sys_rst_n == 1'b0)
             reg1_rdata = 32'b0;
-        // for dependency
+        // 强制使得，只要调用register 0，它的值就是0
+        else if (reg1_raddr == 5'd0)
+            reg1_rdata = 32'b0;
+        // solve dependency
         else if (reg_wen == 1'b1 && reg1_raddr == reg_waddr)
             reg1_rdata = reg_wdata;
         else 
@@ -36,7 +39,10 @@ module register_file (
     always @(*) begin
         if (sys_rst_n == 1'b0)
             reg2_rdata = 32'b0;
-        // for dependency
+        // 强制使得，只要调用register 0，它的值就是0
+        else if (reg2_raddr == 5'd0)
+            reg2_rdata = 32'b0;
+        // solve dependency
         else if (reg_wen == 1'b1 && reg2_raddr == reg_waddr)
             reg2_rdata = reg_wdata;
         else

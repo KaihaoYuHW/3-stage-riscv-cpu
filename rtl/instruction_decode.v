@@ -74,17 +74,9 @@ module instruction_decode (
                     end
                 endcase
             end
-            default: begin
-                rs1_addr = 5'd0;
-                rs2_addr = 5'd0;
-                rs1_data_out = 32'b0;
-                rs2_data_out = 32'b0;
-                rd_addr = 5'd0;
-                rd_wen = 1'b0;
-            end
             `INST_TYPE_B: begin
                 case (funct3)
-                    `INST_BNE, `INST_BEQ: begin
+                    `INST_BNE,`INST_BEQ: begin
                         rs1_addr = inst[19:15];
                         rs2_addr = inst[24:20];
                         rs1_data_out = rs1_data_in;
@@ -109,6 +101,22 @@ module instruction_decode (
                 rs2_data_out = 32'b0;
                 rd_addr = inst[11:7];
                 rd_wen = 1'b1;
+            end
+            `INST_LUI: begin
+                rs1_addr = 5'd0;
+                rs2_addr = 5'd0;
+                rs1_data_out = 32'b0;
+                rs2_data_out = 32'b0;
+                rd_addr = inst[11:7];
+                rd_wen = 1'b1;
+            end
+            default: begin
+                rs1_addr = 5'd0;
+                rs2_addr = 5'd0;
+                rs1_data_out = 32'b0;
+                rs2_data_out = 32'b0;
+                rd_addr = 5'd0;
+                rd_wen = 1'b0;
             end
         endcase
     end
