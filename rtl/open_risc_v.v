@@ -21,8 +21,8 @@ module open_risc_v (
     wire [4:0] id_rf_rs1_addr;
     wire [4:0] id_rf_rs2_addr;
     // instruction decode to id_ex
-    wire [31:0] id_id_ex_op1;
-    wire [31:0] id_id_ex_op2;
+    wire [31:0] id_id_ex_rs1_data;
+    wire [31:0] id_id_ex_rs2_data;
     wire [4:0] id_id_ex_rd_addr;
     wire id_id_ex_rd_wen;
 
@@ -37,8 +37,8 @@ module open_risc_v (
     // id_ex to execution
     wire [31:0] id_ex_ex_inst;
     wire [31:0] id_ex_ex_inst_addr;
-    wire [31:0] id_ex_ex_op1;
-    wire [31:0] id_ex_ex_op2;
+    wire [31:0] id_ex_ex_rs1_data;
+    wire [31:0] id_ex_ex_rs2_data;
     // id_ex to register file
     wire [4:0] id_ex_rf_rd_addr;
     wire id_ex_rf_rd_wen;
@@ -68,12 +68,12 @@ module open_risc_v (
 
     instruction_decode instruction_decode_inst (
         .inst(if_id_id_inst),
-        .rs1_data(id_rf_rs1_data),
-        .rs2_data(id_rf_rs2_data),
+        .rs1_data_in(id_rf_rs1_data),
+        .rs2_data_in(id_rf_rs2_data),
         .rs1_addr(id_rf_rs1_addr),
         .rs2_addr(id_rf_rs2_addr),
-        .op1(id_id_ex_op1),
-        .op2(id_id_ex_op2),
+        .rs1_data_out(id_id_ex_rs1_data),
+        .rs2_data_out(id_id_ex_rs2_data),
         .rd_addr(id_id_ex_rd_addr),
         .rd_wen(id_id_ex_rd_wen)
     );
@@ -96,23 +96,27 @@ module open_risc_v (
         .hold_en(ex_if_id_hold_en),
         .inst(if_id_id_inst),
         .inst_addr(if_id_id_ex_inst_addr),
-        .op1(id_id_ex_op1),
-        .op2(id_id_ex_op2),
+        .rs1_data(id_id_ex_rs1_data),
+        .rs2_data(id_id_ex_rs2_data),
         .rd_addr(id_id_ex_rd_addr),
         .rd_wen(id_id_ex_rd_wen),
         .inst_dly(id_ex_ex_inst),
         .inst_addr_dly(id_ex_ex_inst_addr),
-        .op1_dly(id_ex_ex_op1),
-        .op2_dly(id_ex_ex_op2),
+        .rs1_data_dly(id_ex_ex_rs1_data),
+        .rs2_data_dly(id_ex_ex_rs2_data),
         .rd_addr_dly(id_ex_rf_rd_addr),
         .rd_wen_dly(id_ex_rf_rd_wen)
     );
 
     execution execution_inst (
         .inst(id_ex_ex_inst),
-        .op1(id_ex_ex_op1),
-        .op2(id_ex_ex_op2),
-        .rd_data(ex_rf_reg_wdata)
+        .inst_addr(id_ex_ex_inst_addr),
+        .rs1_data(id_ex_ex_rs1_data),
+        .rs2_data(id_ex_ex_rs2_data),
+        .rd_data(ex_rf_reg_wdata),
+        .jump_addr(ex_pc_jump_addr),
+        .jump_en(ex_pc_jump_en),
+        .hold_en(ex_if_id_hold_en)
     );
     
 endmodule
