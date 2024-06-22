@@ -29,7 +29,7 @@ module tb_auto_test;
 
     // initiate instruction memory
     initial begin
-        $readmemh("./inst_txt/rv32ui-p-srl.txt", tb_auto_test.open_risc_v_inst.instruction_fetch_inst.inst_mem);
+        $readmemh("./inst_txt/rv32ui-p-auipc.txt", tb_auto_test.open_risc_v_inst.instruction_fetch_inst.inst_mem);
     end
 
     // display results

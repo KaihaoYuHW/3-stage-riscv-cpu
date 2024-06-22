@@ -148,6 +148,26 @@ module execution (
                         jump_en = rs1_data_equal_rs2_data;
                         hold_en = rs1_data_equal_rs2_data;
                     end
+                    `INST_BLT: begin
+                        jump_addr = (inst_addr + {{19{imm_bne[12]}}, imm_bne}) & {32{rs1_data_less_rs2_data_signed}};
+                        jump_en = rs1_data_less_rs2_data_signed;
+                        hold_en = rs1_data_less_rs2_data_signed;
+                    end
+                    `INST_BGE: begin
+                        jump_addr = (inst_addr + {{19{imm_bne[12]}}, imm_bne}) & {32{~rs1_data_less_rs2_data_signed}};
+                        jump_en = ~rs1_data_less_rs2_data_signed;
+                        hold_en = ~rs1_data_less_rs2_data_signed;
+                    end
+                    `INST_BLTU: begin
+                        jump_addr = (inst_addr + {{19{imm_bne[12]}}, imm_bne}) & {32{rs1_data_less_rs2_data_unsigned}};
+                        jump_en = rs1_data_less_rs2_data_unsigned;
+                        hold_en = rs1_data_less_rs2_data_unsigned;
+                    end
+                    `INST_BGEU: begin
+                        jump_addr = (inst_addr + {{19{imm_bne[12]}}, imm_bne}) & {32{~rs1_data_less_rs2_data_unsigned}};
+                        jump_en = ~rs1_data_less_rs2_data_unsigned;
+                        hold_en = ~rs1_data_less_rs2_data_unsigned;
+                    end
                     default: begin
                         jump_addr = 32'd0;
                         jump_en = 1'b0;
@@ -164,6 +184,18 @@ module execution (
             end
             `INST_LUI: begin
                 rd_data = imm_lui;
+                jump_addr = 32'd0;
+                jump_en = 1'b0;
+                hold_en = 1'b0;
+            end
+            `INST_JALR: begin
+                rd_data = inst_addr + 32'd4;
+                jump_addr = rs1_data + {{20{imm_addi[11]}}, imm_addi};
+                jump_en = 1'b1;
+                hold_en = 1'b1;
+            end
+            `INST_AUIPC: begin
+                rd_data = inst_addr + imm_lui;
                 jump_addr = 32'd0;
                 jump_en = 1'b0;
                 hold_en = 1'b0;
