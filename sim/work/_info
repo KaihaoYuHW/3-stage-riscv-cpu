@@ -9,20 +9,20 @@ z2
 cModel Technology
 Z0 dE:/ModelSim_10.5se/examples
 T_opt
-!s110 1719004750
-Ve3aeD:Thn<Y;K?OKaADD<3
+!s110 1719050175
+VcRZk8dB5NB2InfWlh`Obe0
 04 11 4 work tb_bne_inst fast 0
-=1-c85b76c4451a-6675ee4e-3c-334c
+=1-c85b76c4451a-66769fbe-3c9-2860
 Z1 o-quiet -auto_acc_if_foreign -work work +acc
 Z2 tCvgOpt 0
 n@_opt
 Z3 OL;O;10.5;63
 R0
 T_opt1
-!s110 1719009187
-V4cC]U7kKjzDkS>zjaH7FH1
+!s110 1719076512
+Vi3[T9ebG[d[AZOz9m51IE1
 04 12 4 work tb_auto_test fast 0
-=1-c85b76c4451a-6675ffa2-272-214c
+=1-c85b76c4451a-667706a0-8c-18b4
 R1
 R2
 n@_opt1
@@ -38,13 +38,13 @@ n@_opt2
 R3
 R0
 vexecution
-Z4 !s110 1719009176
+Z4 !s110 1719076503
 !i10b 1
-!s100 ?03G2LX28PfAK=Yg@4b3=1
-IF6X]VAG[oQInoLmoC64<W3
+!s100 Gnn2OzMHUgK<4DX0jcZJP1
+I48:H`F1<m=Z7:FmYYGK]`2
 Z5 VDg1SIo80bB@j0V0VzS_@n1
 Z6 dE:/IC_design/3-stage-riscv-cpu/sim
-w1719004666
+w1719076323
 8E:/IC_design/3-stage-riscv-cpu/rtl/execution.v
 FE:/IC_design/3-stage-riscv-cpu/rtl/execution.v
 L0 3
@@ -52,7 +52,7 @@ Z7 OL;L;10.5;63
 r1
 !s85 0
 31
-Z8 !s108 1719009176.000000
+Z8 !s108 1719076503.000000
 !s107 E:\IC_design\3-stage-riscv-cpu\rtl\defines.v|E:/IC_design/3-stage-riscv-cpu/rtl/execution.v|
 !s90 -reportprogress|300|-work|work|-vopt|-stats=none|E:/IC_design/3-stage-riscv-cpu/rtl/execution.v|
 !i113 0
@@ -101,13 +101,13 @@ R8
 R9
 R2
 vinstruction_decode
-R4
+Z10 !s110 1719076504
 !i10b 1
-!s100 f:PDC05VAL2l__dl3iz1L1
-Ibe74aHU;e1]WLa5;HO>nI3
+!s100 Cc<ZdbNP`S<1FEPOVz`UM1
+IUk1OG5=@dQ;CI^=S^=k;Z3
 R5
 R6
-w1718986240
+w1719069617
 8E:/IC_design/3-stage-riscv-cpu/rtl/instruction_decode.v
 FE:/IC_design/3-stage-riscv-cpu/rtl/instruction_decode.v
 L0 3
@@ -115,14 +115,14 @@ R7
 r1
 !s85 0
 31
-R8
+Z11 !s108 1719076504.000000
 !s107 E:\IC_design\3-stage-riscv-cpu\rtl\defines.v|E:/IC_design/3-stage-riscv-cpu/rtl/instruction_decode.v|
 !s90 -reportprogress|300|-work|work|-vopt|-stats=none|E:/IC_design/3-stage-riscv-cpu/rtl/instruction_decode.v|
 !i113 0
 R9
 R2
 vinstruction_fetch
-Z10 !s110 1719009177
+R10
 !i10b 1
 !s100 Mc;N3@P5C680S6Z@z97JR2
 IcW]e82OkQZZN:FZ9NmgnO0
@@ -136,14 +136,14 @@ R7
 r1
 !s85 0
 31
-Z11 !s108 1719009177.000000
+R11
 !s107 E:/IC_design/3-stage-riscv-cpu/rtl/instruction_fetch.v|
 !s90 -reportprogress|300|-work|work|-vopt|-stats=none|E:/IC_design/3-stage-riscv-cpu/rtl/instruction_fetch.v|
 !i113 0
 R9
 R2
 vopen_risc_v
-Z12 !s110 1719009178
+Z12 !s110 1719076505
 !i10b 1
 !s100 `Hjk5^AHec2L=L]<D30[T1
 I?7M5ZRQe]LPWNA]6bSF>e3
@@ -157,7 +157,7 @@ R7
 r1
 !s85 0
 31
-Z13 !s108 1719009178.000000
+Z13 !s108 1719076505.000000
 !s107 E:/IC_design/3-stage-riscv-cpu/sim/open_risc_v.v|
 !s90 -reportprogress|300|-work|work|-vopt|-stats=none|E:/IC_design/3-stage-riscv-cpu/sim/open_risc_v.v|
 !i113 0
@@ -191,7 +191,7 @@ R10
 IYA<jCMS[4I9JQNoCocMAZ0
 R5
 R6
-w1719009146
+w1719038037
 8E:/IC_design/3-stage-riscv-cpu/rtl/register_file.v
 FE:/IC_design/3-stage-riscv-cpu/rtl/register_file.v
 L0 1
@@ -229,11 +229,11 @@ R2
 vtb_auto_test
 R10
 !i10b 1
-!s100 =2IK;WI:C_SmYHEG?BLNk0
-IUFYoLMd]UD6CS<a:R[18n1
+!s100 BMd^ZBnXca:e0[bPTzT5@1
+I2ScJdW;?hEBl@8_fGzgDJ2
 R5
 R6
-w1719008694
+w1719076493
 8E:/IC_design/3-stage-riscv-cpu/sim/tb_auto_test.v
 FE:/IC_design/3-stage-riscv-cpu/sim/tb_auto_test.v
 L0 3

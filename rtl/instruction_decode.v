@@ -36,9 +36,17 @@ module instruction_decode (
         case (opcode)
             `INST_TYPE_I: begin
                 case (funct3)
-                    `INST_ADDI: begin
+                    `INST_ADDI,`INST_SLTI,`INST_SLTIU,`INST_XORI,`INST_ORI,`INST_ANDI: begin
                         rs1_addr = inst[19:15];
-                        rs2_addr = 5'b0;
+                        rs2_addr = 5'd0;
+                        rs1_data_out = rs1_data_in;
+                        rs2_data_out = 32'b0;
+                        rd_addr = inst[11:7];
+                        rd_wen = 1'b1;
+                    end
+                    `INST_SLLI,`INST_SRI: begin
+                        rs1_addr = inst[19:15];
+                        rs2_addr = 5'd0;
                         rs1_data_out = rs1_data_in;
                         rs2_data_out = 32'b0;
                         rd_addr = inst[11:7];
@@ -56,7 +64,7 @@ module instruction_decode (
             end
             `INST_TYPE_R_M: begin
                 case (funct3)
-                    `INST_ADD_SUB: begin
+                    `INST_ADD_SUB,`INST_SLL,`INST_SLT,`INST_SLTU,`INST_XOR,`INST_SR,`INST_OR,`INST_AND: begin
                         rs1_addr = inst[19:15];
                         rs2_addr = inst[24:20];
                         rs1_data_out = rs1_data_in;
