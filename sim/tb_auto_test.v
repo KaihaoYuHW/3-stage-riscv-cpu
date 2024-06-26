@@ -9,9 +9,9 @@ module tb_auto_test;
     // outputs
 
 
-    wire [31:0] x3;     // 表示我们第几个test。
-    wire [31:0] x26;    // 为1，表示我们测试结束。
-    wire [31:0] x27;    // 为0表示fail，为1表示pass。
+    wire [31:0] x3;     // which test is processing
+    wire [31:0] x26;    // when x26 = 1, the test finished.
+    wire [31:0] x27;    // When x27 = 0, the test failed.
     
     assign x3 = tb_auto_test.open_risc_v_inst.register_file_inst.reg_mem[3];
     assign x26 = tb_auto_test.open_risc_v_inst.register_file_inst.reg_mem[26];
@@ -29,23 +29,23 @@ module tb_auto_test;
 
     // initiate instruction memory
     initial begin
-        $readmemh("./inst_txt/rv32ui-p-bltu.txt", tb_auto_test.open_risc_v_inst.instruction_fetch_inst.inst_mem);
+        $readmemh("./inst_txt/rv32ui-p-sw.txt", tb_auto_test.open_risc_v_inst.instruction_fetch_inst.instruction_memory.inst_mem);
     end
 
     // display results
     integer i;
     initial begin
-        // 实现等待功能，当wait括号里面的条件成立，就可以执行wait后面的语句了。
+        // As soon as the condition in wait funtion is true, we execute the next code.
         wait (x26 == 32'b1);
 
-        // 至少延时一个周期，使s11置1以后，再判断pass or fail
+        // We must wait at least one clock cycle (i.e. register s11 = 1), and then determine pass or not.
         #200;
         if (x27 == 32'b1)
             $display("######  pass  !!!######");
         else begin
             $display("######  fail  !!!######");
-            $display("fail testnum = %2d", x3); // 测试的哪个test出问题了
-            // fail，则打印所有registers中的值，来查看具体哪里出错。
+            $display("fail testnum = %2d", x3); // Which test failed
+            // if it failed, print all registers values to see the specific problems. 
             for(i = 0; i < 32; i = i + 1) begin
                 $display("x%2d register value is %d", i, tb_auto_test.open_risc_v_inst.register_file_inst.reg_mem[i]);
             end

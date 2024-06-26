@@ -26,7 +26,7 @@ module register_file (
     always @(*) begin
         if (sys_rst_n == 1'b0)
             reg1_rdata = 32'b0;
-        // 强制，只要调用register 0，它的值就是0。提前assign reg_mem[0] = 0是没有用的，因为后面如果有命令add zero,ra,sp还是会给register 0赋值。
+        // As soon as register 0 is called, its value is forced to be 0. It is useless to assign reg_mem[0] = 0 in advance because if there is an instruction like add zero,ra,sp next, register 0 will not equal to 0.
         else if (reg1_raddr == 5'd0)
             reg1_rdata = 32'b0;
         // solve dependency
@@ -39,7 +39,6 @@ module register_file (
     always @(*) begin
         if (sys_rst_n == 1'b0)
             reg2_rdata = 32'b0;
-        // 强制，只要调用register 0，它的值就是0。提前assign reg_mem[0] = 0是没有用的，因为后面如果有命令add zero,ra,sp还是会给register 0赋值。
         else if (reg2_raddr == 5'd0)
             reg2_rdata = 32'b0;
         // solve dependency

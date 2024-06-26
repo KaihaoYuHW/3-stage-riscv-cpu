@@ -26,6 +26,13 @@ Model Technology ModelSim SE-64 vlog 10.5 Compiler 2016.02 Feb 13 2016
 Top level modules:
 	tb_add_inst
 
+} {} {}} E:/IC_design/3-stage-riscv-cpu/rtl/if_id.v {1 {vlog -work work -vopt -stats=none E:/IC_design/3-stage-riscv-cpu/rtl/if_id.v
+Model Technology ModelSim SE-64 vlog 10.5 Compiler 2016.02 Feb 13 2016
+-- Compiling module if_id
+
+Top level modules:
+	if_id
+
 } {} {}} E:/IC_design/3-stage-riscv-cpu/rtl/instruction_fetch.v {1 {vlog -work work -vopt -stats=none E:/IC_design/3-stage-riscv-cpu/rtl/instruction_fetch.v
 Model Technology ModelSim SE-64 vlog 10.5 Compiler 2016.02 Feb 13 2016
 -- Compiling module instruction_fetch
@@ -33,12 +40,12 @@ Model Technology ModelSim SE-64 vlog 10.5 Compiler 2016.02 Feb 13 2016
 Top level modules:
 	instruction_fetch
 
-} {} {}} E:/IC_design/3-stage-riscv-cpu/rtl/if_id.v {1 {vlog -work work -vopt -stats=none E:/IC_design/3-stage-riscv-cpu/rtl/if_id.v
+} {} {}} E:/IC_design/3-stage-riscv-cpu/rtl/register_file.v {1 {vlog -work work -vopt -stats=none E:/IC_design/3-stage-riscv-cpu/rtl/register_file.v
 Model Technology ModelSim SE-64 vlog 10.5 Compiler 2016.02 Feb 13 2016
--- Compiling module if_id
+-- Compiling module register_file
 
 Top level modules:
-	if_id
+	register_file
 
 } {} {}} E:/IC_design/3-stage-riscv-cpu/rtl/execution.v {1 {vlog -work work -vopt -stats=none E:/IC_design/3-stage-riscv-cpu/rtl/execution.v
 Model Technology ModelSim SE-64 vlog 10.5 Compiler 2016.02 Feb 13 2016
@@ -47,12 +54,12 @@ Model Technology ModelSim SE-64 vlog 10.5 Compiler 2016.02 Feb 13 2016
 Top level modules:
 	execution
 
-} {} {}} E:/IC_design/3-stage-riscv-cpu/rtl/register_file.v {1 {vlog -work work -vopt -stats=none E:/IC_design/3-stage-riscv-cpu/rtl/register_file.v
+} {} {}} E:/IC_design/3-stage-riscv-cpu/rtl/dual_ram.v {1 {vlog -work work -vopt -stats=none E:/IC_design/3-stage-riscv-cpu/rtl/dual_ram.v
 Model Technology ModelSim SE-64 vlog 10.5 Compiler 2016.02 Feb 13 2016
--- Compiling module register_file
+-- Compiling module dual_ram
 
 Top level modules:
-	register_file
+	dual_ram
 
 } {} {}} E:/IC_design/3-stage-riscv-cpu/rtl/instruction_decode.v {1 {vlog -work work -vopt -stats=none E:/IC_design/3-stage-riscv-cpu/rtl/instruction_decode.v
 Model Technology ModelSim SE-64 vlog 10.5 Compiler 2016.02 Feb 13 2016
@@ -70,6 +77,13 @@ Model Technology ModelSim SE-64 vlog 10.5 Compiler 2016.02 Feb 13 2016
 
 Top level modules:
 	open_risc_v
+
+} {} {}} E:/IC_design/3-stage-riscv-cpu/rtl/ram.v {1 {vlog -work work -vopt -stats=none E:/IC_design/3-stage-riscv-cpu/rtl/ram.v
+Model Technology ModelSim SE-64 vlog 10.5 Compiler 2016.02 Feb 13 2016
+-- Compiling module ram
+
+Top level modules:
+	ram
 
 } {} {}} E:/IC_design/3-stage-riscv-cpu/sim/tb_auto_test.v {1 {vlog -work work -vopt -stats=none E:/IC_design/3-stage-riscv-cpu/sim/tb_auto_test.v
 Model Technology ModelSim SE-64 vlog 10.5 Compiler 2016.02 Feb 13 2016

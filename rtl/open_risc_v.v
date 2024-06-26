@@ -47,6 +47,16 @@ module open_risc_v (
     wire [4:0] id_ex_rf_rd_addr;
     wire id_ex_rf_rd_wen;
 
+    // ex to ram
+    wire [31:0] ex_ram_w_addr;
+    wire [31:0] ex_ram_w_data;
+    wire [3:0] ex_ram_wen;
+    wire [31:0] ram_ex_r_data;
+
+    // id to ram
+    wire id_ram_ren;
+    wire [31:0] id_ram_r_addr;
+
     program_counter program_counter_inst (
         .sys_clk(sys_clk),
         .sys_rst_n(sys_rst_n),
@@ -56,8 +66,14 @@ module open_risc_v (
     );
 
     instruction_fetch instruction_fetch_inst (
-        .inst_addr(pc_if_inst_addr),
-        .inst(if_if_id_inst)
+        .sys_clk(sys_clk),
+        .sys_rst_n(sys_rst_n),
+        .wen(1'b0),
+        .w_addr(32'd0),
+        .w_data(32'd0),
+        .ren(1'b1),
+        .r_addr(pc_if_inst_addr),
+        .r_data(if_if_id_inst)
     );
 
     if_id if_id_inst (
@@ -82,7 +98,9 @@ module open_risc_v (
         .rd_addr(id_id_ex_rd_addr),
         .rd_wen(id_id_ex_rd_wen),
         .base_addr(id_id_ex_base_addr),
-        .addr_offset(id_id_ex_addr_offset)
+        .addr_offset(id_id_ex_addr_offset),
+        .ram_ren(id_ram_ren),
+        .ram_r_addr(id_ram_r_addr)
     );
 
     register_file register_file_inst (
@@ -129,7 +147,22 @@ module open_risc_v (
         .rd_data(ex_rf_reg_wdata),
         .jump_addr(ex_pc_jump_addr),
         .jump_en(ex_pc_jump_en),
-        .hold_en(ex_if_id_hold_en)
+        .hold_en(ex_if_id_hold_en),
+        .ram_r_data(ram_ex_r_data),
+        .ram_w_addr(ex_ram_w_addr),
+        .ram_wen(ex_ram_wen),
+        .ram_w_data(ex_ram_w_data)
     );
-    
+
+    ram ram_inst (
+        .sys_clk(sys_clk),
+        .sys_rst_n(sys_rst_n),
+        .wen(ex_ram_wen),
+        .w_addr(ex_ram_w_addr),
+        .w_data(ex_ram_w_data),
+        .ren(id_ram_ren),
+        .r_addr(id_ram_r_addr),
+        .r_data(ram_ex_r_data)
+    );
+
 endmodule

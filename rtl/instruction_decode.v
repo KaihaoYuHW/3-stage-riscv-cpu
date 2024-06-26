@@ -22,13 +22,16 @@ module instruction_decode (
     // write enable
     output reg rd_wen,
     output reg [31:0] base_addr,
-    output reg [31:0] addr_offset
+    output reg [31:0] addr_offset,
+
+    // to ram reading
+    output reg ram_ren,
+    output reg [31:0] ram_r_addr
 );
 
     wire [6:0] funct7;
     wire [2:0] funct3;
     wire [6:0] opcode;
-    // 为了更加直观地对照instruction的结构（即rs1就是rs1，而不是将imm暂时放入rs1中），我们将imm放到execution中定义。
 
     assign funct7 = inst[31:25];
     assign funct3 = inst[14:12];
@@ -39,6 +42,8 @@ module instruction_decode (
             `INST_TYPE_I: begin
                 base_addr = 32'd0;
                 addr_offset = 32'd0;
+                ram_ren = 1'b0;
+                ram_r_addr = 32'd0;
                 case (funct3)
                     `INST_ADDI,`INST_SLTI,`INST_SLTIU,`INST_XORI,`INST_ORI,`INST_ANDI: begin
                         rs1_addr = inst[19:15];
@@ -69,6 +74,8 @@ module instruction_decode (
             `INST_TYPE_R_M: begin
                 base_addr = 32'd0;
                 addr_offset = 32'd0;
+                ram_ren = 1'b0;
+                ram_r_addr = 32'd0;
                 case (funct3)
                     `INST_ADD_SUB,`INST_SLT,`INST_SLTU,`INST_XOR,`INST_OR,`INST_AND: begin
                         rs1_addr = inst[19:15];
@@ -97,6 +104,8 @@ module instruction_decode (
                 endcase
             end
             `INST_TYPE_B: begin
+                ram_ren = 1'b0;
+                ram_r_addr = 32'd0;
                 case (funct3)
                     `INST_BNE,`INST_BEQ,`INST_BLT,`INST_BGE,`INST_BLTU,`INST_BGEU: begin
                         rs1_addr = inst[19:15];
@@ -120,6 +129,62 @@ module instruction_decode (
                     end
                 endcase
             end
+            `INST_TYPE_L: begin
+                case (funct3)
+                    `INST_LW,`INST_LH,`INST_LB,`INST_LHU,`INST_LBU: begin
+                        rs1_addr = inst[19:15];
+                        rs2_addr = 5'd0;
+                        op1 = rs1_data;
+                        op2 = {{20{inst[31]}}, inst[31:20]};
+                        rd_addr = inst[11:7];
+                        rd_wen = 1'b1;
+                        base_addr = 32'd0;
+                        addr_offset = 32'd0;
+                        ram_ren = 1'b1;
+                        ram_r_addr = rs1_data + {{20{inst[31]}}, inst[31:20]};
+                    end
+                    default: begin
+                        rs1_addr = 5'd0;
+                        rs2_addr = 5'd0;
+                        op1 = 32'b0;
+                        op2 = 32'b0;
+                        rd_addr = 5'd0;
+                        rd_wen = 1'b0;
+                        base_addr = 32'd0;
+                        addr_offset = 32'd0;
+                        ram_ren = 1'b0;
+                        ram_r_addr = 32'd0;
+                    end
+                endcase
+            end
+            `INST_TYPE_S: begin
+                case (funct3)
+                    `INST_SW,`INST_SH,`INST_SB: begin
+                        rs1_addr = inst[19:15];
+                        rs2_addr = inst[24:20];
+                        op1 = 32'b0;
+                        op2 = rs2_data;
+                        rd_addr = 5'd0;
+                        rd_wen = 1'b0;
+                        base_addr = rs1_data;
+                        addr_offset = {{20{inst[31]}}, inst[31:25], inst[11:7]};
+                        ram_ren = 1'b0;
+                        ram_r_addr = 32'd0;
+                    end
+                    default: begin
+                        rs1_addr = 5'd0;
+                        rs2_addr = 5'd0;
+                        op1 = 32'b0;
+                        op2 = 32'b0;
+                        rd_addr = 5'd0;
+                        rd_wen = 1'b0;
+                        base_addr = 32'd0;
+                        addr_offset = 32'd0;
+                        ram_ren = 1'b0;
+                        ram_r_addr = 32'd0;
+                    end
+                endcase
+            end
             `INST_JAL: begin
                 rs1_addr = 5'd0;
                 rs2_addr = 5'd0;
@@ -129,6 +194,8 @@ module instruction_decode (
                 rd_wen = 1'b1;
                 base_addr = inst_addr;
                 addr_offset = {{11{inst[31]}}, inst[31], inst[19:12], inst[20], inst[30:21], 1'b0};     // imm_jal
+                ram_ren = 1'b0;
+                ram_r_addr = 32'd0;
             end
             `INST_LUI: begin
                 rs1_addr = 5'd0;
@@ -139,6 +206,8 @@ module instruction_decode (
                 rd_wen = 1'b1;
                 base_addr = 32'd0;
                 addr_offset = 32'd0; 
+                ram_ren = 1'b0;
+                ram_r_addr = 32'd0;
             end
             `INST_JALR: begin
                 rs1_addr = inst[19:15];
@@ -149,6 +218,8 @@ module instruction_decode (
                 rd_wen = 1'b1;
                 base_addr = rs1_data;
                 addr_offset = {{20{inst[31]}}, inst[31:20]};    // imm_jalr=imm_addi
+                ram_ren = 1'b0;
+                ram_r_addr = 32'd0;
             end
             `INST_AUIPC: begin
                 rs1_addr = 5'd0;
@@ -159,6 +230,8 @@ module instruction_decode (
                 rd_wen = 1'b1;
                 base_addr = 32'd0;
                 addr_offset = 32'd0;
+                ram_ren = 1'b0;
+                ram_r_addr = 32'd0;
             end
             default: begin
                 rs1_addr = 5'd0;
@@ -169,6 +242,8 @@ module instruction_decode (
                 rd_wen = 1'b0;
                 base_addr = 32'd0;
                 addr_offset = 32'd0;
+                ram_ren = 1'b0;
+                ram_r_addr = 32'd0;
             end
         endcase
     end

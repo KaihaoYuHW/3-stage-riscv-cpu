@@ -14,7 +14,15 @@ module execution (
     // to ctrl
     output reg [31:0] jump_addr,
     output reg jump_en,
-    output reg hold_en
+    output reg hold_en,
+
+    // from ram reading
+    input wire [31:0] ram_r_data,
+
+    // to ram writing
+    output reg [31:0] ram_w_addr,
+    output reg [3:0] ram_wen,
+    output reg [31:0] ram_w_data
 );
 
     wire [6:0] funct7;
@@ -181,8 +189,145 @@ module execution (
                     end
                 endcase
             end
+            `INST_TYPE_L: begin
+                jump_addr = 32'd0;
+                jump_en = 1'b0;
+                hold_en = 1'b0;
+                case (funct3)
+                    `INST_LW: begin
+                        rd_data = ram_r_data;
+                    end
+                    `INST_LH: begin
+                        case (op1_add_op2[1])
+                            1'b0: begin
+                                rd_data = {{16{ram_r_data[15]}}, ram_r_data[15:0]};
+                            end
+                            1'b1: begin
+                                rd_data = {{16{ram_r_data[31]}},ram_r_data[31:16]};
+                            end
+                            default: begin
+                                rd_data = 32'b0;
+                            end
+                        endcase
+                    end
+                    `INST_LB: begin
+                        case (op1_add_op2[1:0])
+                            2'b00: begin
+                                rd_data = {{24{ram_r_data[7]}}, ram_r_data[7:0]};
+                            end
+                            2'b01: begin
+                                rd_data = {{24{ram_r_data[15]}}, ram_r_data[15:8]};
+                            end
+                            2'b10: begin
+                                rd_data = {{24{ram_r_data[23]}}, ram_r_data[23:16]};
+                            end
+                            2'b11: begin
+                                rd_data = {{24{ram_r_data[31]}}, ram_r_data[31:24]};
+                            end
+                            default: begin
+                                rd_data = 32'b0;
+                            end
+                        endcase
+                    end
+                    `INST_LHU: begin
+                        case (op1_add_op2[1])
+                            1'b0: begin
+                                rd_data = {16'b0, ram_r_data[15:0]};
+                            end
+                            1'b1: begin
+                                rd_data = {16'b0, ram_r_data[31:16]};
+                            end
+                            default: begin
+                                rd_data = 32'b0;
+                            end
+                        endcase
+                    end
+                    `INST_LBU: begin
+                        case (op1_add_op2[1:0])
+                            2'b00: begin
+                                rd_data = {24'b0, ram_r_data[7:0]};
+                            end
+                            2'b01: begin
+                                rd_data = {24'b0, ram_r_data[15:8]};
+                            end
+                            2'b10: begin
+                                rd_data = {24'b0, ram_r_data[23:16]};
+                            end
+                            2'b11: begin
+                                rd_data = {24'b0, ram_r_data[31:24]};
+                            end
+                            default: begin
+                                rd_data = 32'b0;
+                            end
+                        endcase
+                    end
+                    default: begin
+                        rd_data = 32'b0;
+                    end
+                endcase
+            end
+            `INST_TYPE_S: begin
+                jump_addr = 32'd0;
+                jump_en = 1'b0;
+                hold_en = 1'b0;
+                rd_data = 32'b0;
+                case (funct3)
+                    `INST_SW: begin
+                        ram_wen = 4'b1111;
+                        ram_w_addr = base_addr_add_addr_offset;
+                        ram_w_data = op2;
+                    end
+                    `INST_SH: begin
+                        ram_w_addr = base_addr_add_addr_offset;
+                        case (base_addr_add_addr_offset[1])
+                            1'b0: begin
+                                ram_wen = 4'b0011;
+                                ram_w_data = {16'b0, op2[15:0]};
+                            end
+                            1'b1: begin
+                                ram_wen = 4'b1100;
+                                ram_w_data = {op2[15:0], 16'b0};
+                            end
+                            default: begin
+                                ram_wen = 4'b0000;
+                                ram_w_data = 32'b0;
+                            end
+                        endcase
+                    end
+                    `INST_SB: begin
+                        ram_w_addr = base_addr_add_addr_offset;
+                        case (base_addr_add_addr_offset)
+                            2'b00: begin
+                                ram_wen = 4'b0001;
+                                ram_w_data = {24'b0, op2[7:0]};
+                            end 
+                            2'b01: begin
+                                ram_wen = 4'b0010;
+                                ram_w_data = {16'b0, op2[7:0], 8'b0};
+                            end
+                            2'b10: begin
+                                ram_wen = 4'b0100;
+                                ram_w_data = {8'b0, op2[7:0], 16'b0};
+                            end
+                            2'b11: begin
+                                ram_wen = 4'b1000;
+                                ram_w_data = {op2[7:0], 24'b0};
+                            end
+                            default: begin
+                                ram_wen = 4'b0000;
+                                ram_w_data = 32'b0;
+                            end
+                        endcase
+                    end
+                    default: begin
+                        ram_wen = 4'b0;
+                        ram_w_addr = 32'b0;
+                        ram_w_data = 32'b0;
+                    end
+                endcase
+            end
             `INST_JAL: begin
-                // 将JAL指令后面指令的地址（PC+4）保存到寄存器rd中，主要是为了返回跳转前的位置继续执行。
+                // store the instruction address (PC+4) following JAL insturction in register rd, so that we can return to the position before JAL and keep processing. 
                 rd_data = op1_add_op2;
                 jump_addr = base_addr_add_addr_offset;
                 jump_en = 1'b1;
