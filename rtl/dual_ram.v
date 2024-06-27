@@ -37,6 +37,7 @@ module dual_ram #(
             inst_mem[w_addr] <= w_data;
     end
 
+    // When reading and writing the same block in memory at a time, we must read the new value that is about to be written instead of old value in the block. 
     always @(posedge sys_clk or negedge sys_rst_n) begin
         if (sys_rst_n == 1'b0)
             w_data_dly <= 32'b0;
@@ -44,7 +45,6 @@ module dual_ram #(
             w_data_dly <= w_data;
     end
 
-    // When reading and writing the same block in memory at a time, we must read the new value that is about to be written instead of old value in the block. 
     always @(posedge sys_clk or negedge sys_rst_n) begin
         if (sys_rst_n == 1'b0)
             rd_equ_wr_flag <= 1'b0;

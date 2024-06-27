@@ -22,6 +22,7 @@ module if_id (
 
     assign inst_dly = (hold_en_dly) ? `INST_NOP : inst;
 
+    // delay inst_addr 1 clock cycle
     always @(posedge sys_clk or negedge sys_rst_n) begin
         if (sys_rst_n == 1'b0 || hold_en == 1'b1)
             inst_addr_dly <= 32'd0;
